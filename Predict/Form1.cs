@@ -164,10 +164,10 @@ namespace Predict
                                    " ,TotalMatches: " + totalMatches +
                                    " , Total " + totalScore);
                
-                foreach (KeyValuePair<int, int> keyValuePair in totalScoreDictionary)
-                {
-                    listBox1.Items.Add("(" + keyValuePair.Key + "," + keyValuePair.Value+")");
-                }
+                //foreach (KeyValuePair<int, int> keyValuePair in totalScoreDictionary)
+                //{
+                //    listBox1.Items.Add("(" + keyValuePair.Key + "," + keyValuePair.Value+")");
+                //}
                 
             }
             if (totalScore > maxScore)
