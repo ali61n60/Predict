@@ -59,7 +59,7 @@
     </Compile>
     <Compile Include="Infrastructure\RankCalculator.cs" />
     <Compile Include="Models\MatchResult.cs" />
-    <Compile Include="Models\Prdiction.cs" />
+    <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Policy\IPolicy.cs" />
     <Compile Include="Program.cs" />

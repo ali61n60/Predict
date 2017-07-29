@@ -12,6 +12,7 @@ namespace Predict.Repository
     public interface IRepository
     {
         List<Team> GetTeams();
+        List<MatchResult> GetMatchResults();
     }
 
     public class TeamRepository : IRepository
@@ -41,6 +42,39 @@ namespace Predict.Repository
                 }
             }
             return allTeams;
+        }
+
+        public List<MatchResult> GetMatchResults()
+        {
+            List<MatchResult> allMatchResults=new List<MatchResult>();
+            List<Team> allTeams = GetTeams();
+            MatchResult tempMatchResult;
+            string query = " SELECT Matchs.Id,Matchs.Week, H.TeamName AS Host,Matchs.HostGoals,Matchs.GuestGoals, " +
+                           " G.TeamName AS Guest FROM Matchs INNER JOIN Teams AS H ON Matchs.HostId = H.Id " +
+                           " INNER JOIN Teams AS G ON Matchs.GuestId = G.Id ";
+            SqlDataReader dataReader;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    //command.Parameters.Add("@start", SqlDbType.Int).Value = index;
+                    //command.Parameters.Add("@end", SqlDbType.Int).Value = (index + count - 1);
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        tempMatchResult = new MatchResult(
+                            allTeams.Find(team => team.TeamName == dataReader["Host"].ToString()),
+                            (int) dataReader["HostGoals"],
+                            allTeams.Find(team => team.TeamName == dataReader["Guest"].ToString()),
+                            (int) dataReader["GuestGoals"],
+                            (int) dataReader["Week"]);
+                        allMatchResults.Add(tempMatchResult);
+                    }
+                }
+            }
+            return allMatchResults;
+
         }
 
         public string GetConnectionString()
