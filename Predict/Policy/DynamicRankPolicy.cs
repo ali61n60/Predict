@@ -22,7 +22,7 @@ namespace Predict.Policy
             _equalGoals = equalGoals;
             _rankCalculator = rankCalculator;
             
-            Name =String.Format("DynamicPolicy({0},{1},{2},{3},{4}",_winnerRank,_loserRank,_winnerGoals,_loserGoals,_equalGoals);
+            Name = $"DynamicPolicy({_winnerRank},{_loserRank},{_winnerGoals},{_loserGoals},{_equalGoals}";
         }
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {

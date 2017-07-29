@@ -11,7 +11,7 @@ namespace Predict.Policy
         {
             _hostGoals = hostGoals;
             _guestGoals = guestGoals;
-            Name = "simplePolicy(" + _hostGoals + "," + _guestGoals + ")";
+            Name = $"simplePolicy( {_hostGoals} , {_guestGoals})";
         }
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {

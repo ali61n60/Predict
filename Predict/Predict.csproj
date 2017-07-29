@@ -62,6 +62,7 @@
     <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Policy\DynamicRankPolicy.cs" />
+    <Compile Include="Policy\HostWinnerPolicy.cs" />
     <Compile Include="Policy\IPolicy.cs" />
     <Compile Include="Policy\RelativeRankPolicy.cs" />
     <Compile Include="Policy\SimplePolicy.cs" />

@@ -62,17 +62,36 @@ namespace Predict
                     {
                         for (int relativeHighToWin = 1; relativeHighToWin < 10; relativeHighToWin++)
                         {
-                            relativePolicyPredict(winnerGoals, loserGoals, equalGoals,relativeHighToWin, rankCalculator);
+                            relativePolicyPredict(winnerGoals, loserGoals, equalGoals, relativeHighToWin, rankCalculator);
                         }
                     }
 
                 }
             }
 
+            //for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
+            //{
+            //    for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
+            //    {
+            //        for (int equalGoals = 0; equalGoals < 5; equalGoals++)
+            //        {
+            //            HostWinPolicyPredict(winnerGoals, loserGoals, equalGoals, rankCalculator);
+            //        }
+            //    }
+            //}
+
 
 
 
             listBox1.Items.Add("MaxScore is : " + maxScore);
+        }
+
+        private void HostWinPolicyPredict(int winnerGoals, int loserGoals, int equalGoals, RankCalculator rankCalculator)
+        {
+            IPolicy policy = new HostWinnerPolicy(winnerGoals, loserGoals, equalGoals,rankCalculator);
+            IRepository repository = new TeamRepository();
+            List<MatchResult> allMatches = repository.GetMatchResults();
+            runPrediction(policy, allMatches);
         }
 
         private void relativePolicyPredict(int winnerGoals, int loserGoals, int equalGoals, int relativeHighToWin,RankCalculator rankCalculator)

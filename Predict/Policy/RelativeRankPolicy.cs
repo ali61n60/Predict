@@ -22,7 +22,7 @@ namespace Predict.Policy
             _equalGoals = equalGoals;
             _relativeHighToWin = relativeHighToWin;
             _rankCalculator = rankCalculator;
-            Name = String.Format("RelativePolicy({0},{1},{2},{3}",_winnerGoals,_loserGoals,_equalGoals,_relativeHighToWin);
+            Name = $"RelativePolicy({_winnerGoals},{_loserGoals},{_equalGoals},{_relativeHighToWin})";
         }
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {
@@ -34,10 +34,10 @@ namespace Predict.Policy
             {
                 myPrediction=new Prediction(){HostGoals = _winnerGoals,GuestGoals = _loserGoals};
             }
-            else if ((guestTeamRank + _relativeHighToWin)< hostTeamRank )//guest higher
-            {
-                myPrediction=new Prediction(){GuestGoals = _winnerGoals,HostGoals = _loserGoals};
-            }
+            //else if ((guestTeamRank + _relativeHighToWin)< hostTeamRank )//guest higher
+            //{
+            //    myPrediction=new Prediction(){GuestGoals = _winnerGoals,HostGoals = _loserGoals};
+            //}
             else
             {
                 myPrediction=new Prediction(){HostGoals = _equalGoals,GuestGoals = _equalGoals};
