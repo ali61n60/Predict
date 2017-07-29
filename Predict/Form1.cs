@@ -57,6 +57,14 @@ namespace Predict
             listBox1.Items.Add("MaxScore is : " + maxScore);
         }
 
+        private void relativePolicyPredict()
+        {
+            IPolicy policy=new RelativeRankPolicy();
+            IRepository repository = new TeamRepository();
+            List<MatchResult> allMatches = repository.GetMatchResults();
+            runPrediction(policy, allMatches);
+        }
+
         private void dynamicPolicyPredict(int winnerRank,int loserRank,int winnerGolas,int loserGoals,int equalGoals,RankCalculator rankCalculator)
         {
             IPolicy policy = new DynamicRankPolicy(winnerRank,loserRank,winnerGolas,loserGoals,equalGoals,rankCalculator);
@@ -100,7 +108,7 @@ namespace Predict
             }
             totalScore = exactPrediction * 10 + sameDiffPrediction * 7 + winnerOkPrediction * 5 + wrongPrediction * 2;
             totalMatches = exactPrediction + sameDiffPrediction + winnerOkPrediction + wrongPrediction;
-            if (totalScore > 1200)
+            if (totalScore > 100)
             {
                 listBox1.Items.Add(policy.Name + " ===>>> Exact: " + exactPrediction +
                                    " , SameDiff: " + sameDiffPrediction +
