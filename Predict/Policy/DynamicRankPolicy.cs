@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Predict.Infrastructure;
 using Predict.Models;
-using Predict.Repository;
 
 namespace Predict.Policy
 {
@@ -17,10 +12,7 @@ namespace Predict.Policy
         private int _loserGoals;
         private int _equalGoals;
         RankCalculator _rankCalculator;
-        IRepository _teamRepository=new TeamRepository();
-        private List<MatchResult> _allMatchResults;
         
-
         public DynamicRankPolicy(int winnerRank,int loserRank,int winnerGoals,int loserGoals,int equalGoals ,RankCalculator rankCalculator) 
         {
             _winnerRank = winnerRank;
@@ -29,10 +21,8 @@ namespace Predict.Policy
             _loserGoals = loserGoals;
             _equalGoals = equalGoals;
             _rankCalculator = rankCalculator;
-            _allMatchResults = _teamRepository.GetMatchResults();
-            Name = "DynamicPolicy("+
-                _winnerRank+","+_loserRank+" , "+
-                _winnerGoals+" , "+_loserGoals+" , "+_equalGoals+" )";
+            
+            Name =String.Format("DynamicPolicy({0},{1},{2},{3},{4}",_winnerRank,_loserRank,_winnerGoals,_loserGoals,_equalGoals);
         }
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {
