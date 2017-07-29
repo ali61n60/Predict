@@ -85,6 +85,8 @@ namespace Predict.Policy
             return myPrediction;
         }
 
+        
+
         private bool lastMatchHostAndLost(Team guestTeam,int week)
         {
             if (week == 1)

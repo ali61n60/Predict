@@ -38,9 +38,9 @@ namespace Predict
             simplePolicyPredict(3, 3);
             simplePolicyPredict(4, 4);
             RankCalculator rankCalculator = new RankCalculator();
-            for (int winnerRand = 0; winnerRand < 5; winnerRand++)
+            for (int winnerRand = 0; winnerRand < 8; winnerRand++)
             {
-                for (int loserRank = 11; loserRank < 17; loserRank++)
+                for (int loserRank = 9; loserRank < 17; loserRank++)
                 {
                     for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
                     {
@@ -123,25 +123,39 @@ namespace Predict
             int wrongPrediction = 0;
             int totalScore = 0;
             int totalMatches = 0;
+            Dictionary<int, int> totalScoreDictionary = new Dictionary<int, int>();
+
 
             foreach (MatchResult matchResult in allMatches)
             {
                 currentPrediction = policy.PredictMatch(matchResult.HosTeam, matchResult.GuestTeam, matchResult.Week);
-                if (currentPrediction.HostGoals == matchResult.HostGoals && currentPrediction.GuestGoals == matchResult.GuestGoals)
+                if (currentPrediction.HostGoals == matchResult.HostGoals &&
+                    currentPrediction.GuestGoals == matchResult.GuestGoals)
+                {
+                    addToDictionary(totalScoreDictionary, matchResult.Week, 10);
                     exactPrediction++;
-                else if ((currentPrediction.HostGoals - currentPrediction.GuestGoals) == (matchResult.HostGoals - matchResult.GuestGoals))
+                }
+                else if ((currentPrediction.HostGoals - currentPrediction.GuestGoals) ==
+                         (matchResult.HostGoals - matchResult.GuestGoals))
+                {
+                    addToDictionary(totalScoreDictionary, matchResult.Week, 7);
                     sameDiffPrediction++;
+                }
                 else if (Math.Sign(currentPrediction.HostGoals - currentPrediction.GuestGoals) ==
                          Math.Sign(matchResult.HostGoals - matchResult.GuestGoals))
+                {
+                    addToDictionary(totalScoreDictionary, matchResult.Week, 5);
                     winnerOkPrediction++;
+                }
                 else
+                {
+                    addToDictionary(totalScoreDictionary, matchResult.Week, 2);
                     wrongPrediction++;
-
-
+                }
             }
             totalScore = exactPrediction * 10 + sameDiffPrediction * 7 + winnerOkPrediction * 5 + wrongPrediction * 2;
             totalMatches = exactPrediction + sameDiffPrediction + winnerOkPrediction + wrongPrediction;
-            if (totalScore > 1200)
+            if (totalScore > 1260)
             {
                 listBox1.Items.Add(policy.Name + " ===>>> Exact: " + exactPrediction +
                                    " , SameDiff: " + sameDiffPrediction +
@@ -149,9 +163,23 @@ namespace Predict
                                    " , WrongGuess: " + wrongPrediction +
                                    " ,TotalMatches: " + totalMatches +
                                    " , Total " + totalScore);
+               
+                foreach (KeyValuePair<int, int> keyValuePair in totalScoreDictionary)
+                {
+                    listBox1.Items.Add("(" + keyValuePair.Key + "," + keyValuePair.Value+")");
+                }
+                
             }
             if (totalScore > maxScore)
                 maxScore = totalScore;
+        }
+
+        private void addToDictionary(Dictionary<int, int> totalScoreDictionary, int week, int score)
+        {
+            if (totalScoreDictionary.ContainsKey(week))
+                totalScoreDictionary[week] += score;
+            else
+                totalScoreDictionary.Add(week,score);
         }
     }
 }
