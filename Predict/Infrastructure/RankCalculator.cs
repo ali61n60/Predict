@@ -52,8 +52,6 @@ namespace Predict.Infrastructure
 
         private List<RankWeek> calculateRanksForWeek(int week)
         {
-            Team tempHostTeam;
-            Team tempGuestTeam;
             List<RankWeek> cuurentWeekRanks=new List<RankWeek>();
             foreach (Team t in allTeams)
             {
@@ -68,9 +66,9 @@ namespace Predict.Infrastructure
                         {
                             t.ScoredGoals += matchResult.HostGoals;
                             t.RecievedGoals += matchResult.GuestGoals;
-                            if (matchResult.HostGoals > matchResult.GuestGoals)
+                            if (matchResult.HostGoals > matchResult.GuestGoals)//won
                                 t.Points += 3;
-                            else if (matchResult.HostGoals == matchResult.GuestGoals)
+                            else if (matchResult.HostGoals == matchResult.GuestGoals)//equal
                                 t.Points += 1;
 
                         }
@@ -78,9 +76,9 @@ namespace Predict.Infrastructure
                         {
                             t.ScoredGoals += matchResult.GuestGoals;
                             t.RecievedGoals += matchResult.HostGoals;
-                            if (matchResult.GuestGoals > matchResult.HostGoals)
+                            if (matchResult.GuestGoals > matchResult.HostGoals)//won
                                 t.Points += 3;
-                            else if (matchResult.GuestGoals == matchResult.HostGoals)
+                            else if (matchResult.GuestGoals == matchResult.HostGoals)//equal
                                 t.Points += 1;
                         }
                     }

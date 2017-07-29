@@ -20,9 +20,12 @@ namespace Predict
         {
             InitializeComponent();
             textBox1.Text = new TeamRepository().GetConnectionString();
+            _allMatches = _repository.GetMatchResults();
         }
 
         private int maxScore = 0;
+        private IRepository _repository = new TeamRepository();
+        private List<MatchResult> _allMatches;
 
         private void buttonGetAllTeams_Click(object sender, EventArgs e)
         {
@@ -89,34 +92,26 @@ namespace Predict
         private void HostWinPolicyPredict(int winnerGoals, int loserGoals, int equalGoals, RankCalculator rankCalculator)
         {
             IPolicy policy = new HostWinnerPolicy(winnerGoals, loserGoals, equalGoals,rankCalculator);
-            IRepository repository = new TeamRepository();
-            List<MatchResult> allMatches = repository.GetMatchResults();
-            runPrediction(policy, allMatches);
+            runPrediction(policy, _allMatches);
         }
 
         private void relativePolicyPredict(int winnerGoals, int loserGoals, int equalGoals, int relativeHighToWin,RankCalculator rankCalculator)
         {
             IPolicy policy = new RelativeRankPolicy(winnerGoals, loserGoals, equalGoals, relativeHighToWin,
                 rankCalculator);
-            IRepository repository = new TeamRepository();
-            List<MatchResult> allMatches = repository.GetMatchResults();
-            runPrediction(policy, allMatches);
+            runPrediction(policy, _allMatches);
         }
 
         private void dynamicPolicyPredict(int winnerRank, int loserRank, int winnerGolas, int loserGoals, int equalGoals, RankCalculator rankCalculator)
         {
-            IPolicy policy = new DynamicRankPolicy(winnerRank, loserRank, winnerGolas, loserGoals, equalGoals, rankCalculator);
-            IRepository repository = new TeamRepository();
-            List<MatchResult> allMatches = repository.GetMatchResults();
-            runPrediction(policy, allMatches);
+            IPolicy policy = new DynamicRankPolicy(winnerRank, loserRank, winnerGolas, loserGoals, equalGoals, rankCalculator, _allMatches);
+            runPrediction(policy, _allMatches);
         }
 
         private void simplePolicyPredict(int hostGoals, int guestGoals)
         {
             IPolicy policy = new SimplePolicy(hostGoals, guestGoals);
-            IRepository repository = new TeamRepository();
-            List<MatchResult> allMatches = repository.GetMatchResults();
-            runPrediction(policy, allMatches);
+            runPrediction(policy, _allMatches);
         }
 
         private void runPrediction(IPolicy policy, List<MatchResult> allMatches)
