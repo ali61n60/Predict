@@ -32,17 +32,17 @@ namespace Predict.Policy
 
             if (hostTeamRank <= _winnerRank)//host winnerRank wins
             {
-                myPrediction = new Prediction(){HostGoals = _winnerGoals,GuestGoals = _loserGoals};
+                myPrediction = new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals };
             }
             else if (guestTeamRank <= _winnerRank)//guest winnerRank wins
             {
-                myPrediction=new Prediction(){HostGoals = _loserGoals,GuestGoals = _winnerGoals};
+                myPrediction = new Prediction() { HostGoals = _loserGoals, GuestGoals = _winnerGoals };
             }
-            else if(guestTeamRank>=_loserRank)//guest loserRank lose
+            else if (guestTeamRank >= _loserRank)//guest loserRank lose
             {
-                myPrediction=new Prediction(){HostGoals = _winnerGoals,GuestGoals = _loserGoals};
+                myPrediction = new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals };
             }
-            else if(hostTeamRank>=_loserRank)//host loserRank lose
+            else if (hostTeamRank >= _loserRank)//host loserRank lose
             {
                 myPrediction = new Prediction() { HostGoals = _loserGoals, GuestGoals = _winnerGoals };
             }

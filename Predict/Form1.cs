@@ -35,39 +35,39 @@ namespace Predict
             simplePolicyPredict(3, 3);
             simplePolicyPredict(4, 4);
             RankCalculator rankCalculator = new RankCalculator();
-            //for (int winnerRand = 0; winnerRand < 5; winnerRand++)
-            //{
-            //    for (int loserRank = 11; loserRank < 17; loserRank++)
-            //    {
-            //        for (int winnerGoals = 1; winnerGoals<=5; winnerGoals++)
-            //        {
-            //            for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
-            //            {
-            //                for (int equalGoals = 0; equalGoals < 5; equalGoals++)
-            //                {
-            //                    dynamicPolicyPredict(winnerRand, loserRank, winnerGoals, loserGoals,equalGoals, rankCalculator);
-            //                }
-            //            }
-            //        }
-
-            //    }
-            //}
-
-
-            for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
+            for (int winnerRand = 0; winnerRand < 5; winnerRand++)
             {
-                for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
+                for (int loserRank = 11; loserRank < 17; loserRank++)
                 {
-                    for (int equalGoals = 0; equalGoals < 5; equalGoals++)
+                    for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
                     {
-                        for (int relativeHighToWin = 1; relativeHighToWin < 10; relativeHighToWin++)
+                        for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
                         {
-                            relativePolicyPredict(winnerGoals, loserGoals, equalGoals, relativeHighToWin, rankCalculator);
+                            for (int equalGoals = 0; equalGoals < 5; equalGoals++)
+                            {
+                                dynamicPolicyPredict(winnerRand, loserRank, winnerGoals, loserGoals, equalGoals, rankCalculator);
+                            }
                         }
                     }
 
                 }
             }
+
+
+            //for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
+            //{
+            //    for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
+            //    {
+            //        for (int equalGoals = 0; equalGoals < 5; equalGoals++)
+            //        {
+            //            for (int relativeHighToWin = 1; relativeHighToWin < 10; relativeHighToWin++)
+            //            {
+            //                relativePolicyPredict(winnerGoals, loserGoals, equalGoals, relativeHighToWin, rankCalculator);
+            //            }
+            //        }
+
+            //    }
+            //}
 
             //for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
             //{
@@ -146,7 +146,7 @@ namespace Predict
             }
             totalScore = exactPrediction * 10 + sameDiffPrediction * 7 + winnerOkPrediction * 5 + wrongPrediction * 2;
             totalMatches = exactPrediction + sameDiffPrediction + winnerOkPrediction + wrongPrediction;
-            if (totalScore > 100)
+            if (totalScore > 1200)
             {
                 listBox1.Items.Add(policy.Name + " ===>>> Exact: " + exactPrediction +
                                    " , SameDiff: " + sameDiffPrediction +
