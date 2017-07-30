@@ -24,7 +24,9 @@ namespace Predict.Repository
         {
             List<Team> allTeams=new List<Team>();
             Team tempTeam;
-            string query = "SELECT * FROM Teams";
+            string query = "SELECT Teams.Id,Teams.TeamName "+
+                " FROM Teams INNER JOIN TeamsInYears ON Teams.Id = TeamsInYears.TeamId "+
+                " WHERE TeamsInYears.Year = 1396 ";
             SqlDataReader dataReader;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -51,7 +53,8 @@ namespace Predict.Repository
             MatchResult tempMatchResult;
             string query = " SELECT Matchs.Id,Matchs.Week, H.TeamName AS Host,Matchs.HostGoals,Matchs.GuestGoals, " +
                            " G.TeamName AS Guest FROM Matchs INNER JOIN Teams AS H ON Matchs.HostId = H.Id " +
-                           " INNER JOIN Teams AS G ON Matchs.GuestId = G.Id ";
+                           " INNER JOIN Teams AS G ON Matchs.GuestId = G.Id "+
+                           " WHERE Matchs.Year=1396 ";
             SqlDataReader dataReader;
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

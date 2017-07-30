@@ -8,15 +8,8 @@ using Predict.Repository;
 
 namespace Predict.Infrastructure
 {
-    public class RankWeek
-    {
-        public int teamId;
-        public int rank;
-        public int week;
-    }
     public class RankCalculator
     {
-        //TODO improve CalculateCurrentRank algorithm to be faster
         private bool alreadyCalculated = false;
         private List<RankWeek> rankWeeks = new List<RankWeek>();
         private List<Team> allTeams;
@@ -114,5 +107,12 @@ namespace Predict.Infrastructure
             }
             return cuurentWeekRanks;
         }
+    }
+
+    public class RankWeek
+    {
+        public int teamId;
+        public int rank;
+        public int week;
     }
 }

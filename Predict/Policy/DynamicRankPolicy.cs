@@ -14,7 +14,11 @@ namespace Predict.Policy
         private int _equalGoals;
         RankCalculator _rankCalculator;
         private List<MatchResult> _allMatchResults;
-        
+        private int _hostTeamRank;
+        private int _guestTeamRank;
+
+        public string Name { get; }
+
         public DynamicRankPolicy(int winnerRank,int loserRank,
             int winnerGoals,int loserGoals,int equalGoals ,RankCalculator rankCalculator,List<MatchResult> allMatchResults) 
         {
@@ -26,72 +30,121 @@ namespace Predict.Policy
             _rankCalculator = rankCalculator;
             _allMatchResults = allMatchResults;
             Name = $"DynamicPolicy({_winnerRank},{_loserRank},{_winnerGoals},{_loserGoals},{_equalGoals})";
+            
         }
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {
             //TODO add 94,93 league data and validate the model
-            //TODO use neural-network model if you want
-            Prediction myPrediction;
-            int hostTeamRank = _rankCalculator.CalculateCurrentRank(week, hostTeam);
-            int guestTeamRank = _rankCalculator.CalculateCurrentRank(week, guestTeam);
+            _hostTeamRank = _rankCalculator.CalculateCurrentRank(week, hostTeam);
+            _guestTeamRank = _rankCalculator.CalculateCurrentRank(week, guestTeam);
 
-            if (hostTeamRank <= _winnerRank && guestTeamRank <= _winnerRank)//both good
+
+            if (bothTeamsAreHighRank())
             {
                 if (lastMatchGuestAndWon(hostTeam, week) || lastMatchHostAndLost(guestTeam,week) )//good host team won last game being gueset
                 {
-                    myPrediction=new Prediction(){HostGoals = _winnerGoals,GuestGoals = _loserGoals};
+                    return hostWin();
                 }
                 else
                 {
-                    myPrediction = new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
+                    return equalResult();
                 }
             }
-            else if (hostTeamRank <= _winnerRank)//host winnerRank wins
+            else if (hostTeamIsHighRank())
             {
-                myPrediction = new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals };
+                return hostWin();
             }
-            else if (guestTeamRank <= _winnerRank)//guest winnerRank wins
+            else if (guestTeamIsHighRank())
             {
-                myPrediction = new Prediction() {HostGoals = _loserGoals, GuestGoals = _winnerGoals};
+                return guestWin();
             }
-            else if(guestTeamRank >= _loserRank && hostTeamRank >= _loserRank)//both bad
+            else if(bothTeamsAreLowRank())
             {
-                if (lastMatchHostAndLost(guestTeam,week))//bad guest team lost last game being host
+                if (lastMatchHostAndLost(guestTeam,week) || lastMatchGuestAndWon(hostTeam,week))
                 {
-                    myPrediction=new Prediction(){HostGoals = _winnerGoals,GuestGoals = _loserGoals};
+                    return hostWin();
                 }
                 else
                 {
-                    myPrediction = new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
+                    return equalResult();
                 }
             }
-            else if (guestTeamRank >= _loserRank)//guest loserRank lose
+            else if (guestTeamIsLowRank())
             {
-                if (last3MatchesScore(guestTeam, week) >= 4)//guest team scored 4 point in last 3 games maxScore 1287
+                if (lastMatchGuestAndWon(hostTeam, week) || lastMatchHostAndLost(guestTeam,week))
                 {
-                    myPrediction = new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
+                    return hostWin();
+                }
+                else if (last3MatchesScore(guestTeam, week) >= 4)
+                {
+                    return equalResult();
                 }
                 else
                 {
-                    myPrediction = new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals };
+                    return hostWin();
                 }
             }
-            else if (hostTeamRank >= _loserRank)//host loserRank lose
+            else if (hostTeamIsLowRank())
             {
-                 myPrediction = new Prediction() {HostGoals = _loserGoals, GuestGoals = _winnerGoals};
+                return guestWin();
             }
             else
             {
-                if (lastMatchGuestAndWon(hostTeam, week) || lastMatchHostAndLost(guestTeam, week))
+                if (lastMatchGuestAndWon(hostTeam, week) ||lastMatchHostAndLost(guestTeam, week))
                 {
-                    myPrediction = new Prediction() {HostGoals = _winnerGoals, GuestGoals = _loserGoals};
+                    return hostWin();
                 }
-                else 
+                else
                 {
-                    myPrediction = new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
+                    return equalResult();
                 }
             }
-            return myPrediction;
+        }
+
+        private Prediction guestWin()
+        {
+            return new Prediction() { HostGoals = _loserGoals, GuestGoals = _winnerGoals };
+        }
+
+        private Prediction equalResult()
+        {
+            return new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
+        }
+
+        private Prediction hostWin()
+        {
+            return new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals };
+        }
+
+        private bool bothTeamsAreLowRank()
+        {
+            return hostTeamIsLowRank() && guestTeamIsLowRank();
+        }
+
+        private bool guestTeamIsLowRank()
+        {
+            return _guestTeamRank >= _loserRank;
+        }
+
+        private bool hostTeamIsLowRank()
+        {
+            return _hostTeamRank >= _loserRank;
+        }
+
+        private bool guestTeamIsHighRank()
+        {
+
+            return _guestTeamRank <= _winnerRank;
+        }
+
+        private bool hostTeamIsHighRank()
+        {
+            return _hostTeamRank <= _winnerRank;
+        }
+
+        private bool bothTeamsAreHighRank()
+        {
+            return hostTeamIsHighRank() && guestTeamIsHighRank();
         }
 
         private int last3MatchesScore(Team team, int currentWeek)
@@ -102,20 +155,20 @@ namespace Predict.Policy
             MatchResult lastWeekMatchResult = _allMatchResults.Find(result => result.Week == (currentWeek - 1) &&
                                                                               (result.HosTeam.Id == team.Id ||
                                                                                result.GuestTeam.Id == team.Id));
-            last3matchscore += getMatchScore(lastWeekMatchResult, team);
+            last3matchscore += getMatchPoints(lastWeekMatchResult, team);
             MatchResult SecondWeekAgoMatchResult = _allMatchResults.Find(result => result.Week == (currentWeek - 2) &&
                                                                               (result.HosTeam.Id == team.Id ||
                                                                                result.GuestTeam.Id == team.Id));
-            last3matchscore += getMatchScore(SecondWeekAgoMatchResult, team);
+            last3matchscore += getMatchPoints(SecondWeekAgoMatchResult, team);
 
             MatchResult ThirdWeekAgolastWeekMatchResult = _allMatchResults.Find(result => result.Week == (currentWeek - 3) &&
                                                                               (result.HosTeam.Id == team.Id ||
                                                                                result.GuestTeam.Id == team.Id));
-            last3matchscore += getMatchScore(ThirdWeekAgolastWeekMatchResult, team);
+            last3matchscore += getMatchPoints(ThirdWeekAgolastWeekMatchResult, team);
             return last3matchscore;
         }
 
-        private int getMatchScore(MatchResult matchResult, Team team)
+        private int getMatchPoints(MatchResult matchResult, Team team)
         {
             if (matchResult.HosTeam.Id == team.Id) //host
             {
@@ -158,7 +211,5 @@ namespace Predict.Policy
                 return true;
             return false;
         }
-
-        public string Name { get; }
     }
 }

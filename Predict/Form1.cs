@@ -32,31 +32,31 @@ namespace Predict
             listBox1.Items.Clear();
 
 
-            simplePolicyPredict(0, 0);
-            simplePolicyPredict(1, 1);
-            simplePolicyPredict(2, 2);
-            simplePolicyPredict(3, 3);
-            simplePolicyPredict(4, 4);
+            //simplePolicyPredict(0, 0);
+            //simplePolicyPredict(1, 1);
+            //simplePolicyPredict(2, 2);
+            //simplePolicyPredict(3, 3);
+            //simplePolicyPredict(4, 4);
             RankCalculator rankCalculator = new RankCalculator();
-            for (int winnerRand = 0; winnerRand < 8; winnerRand++)
-            {
-                for (int loserRank = 9; loserRank < 17; loserRank++)
-                {
-                    for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
-                    {
-                        for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
-                        {
-                            for (int equalGoals = 0; equalGoals < 5; equalGoals++)
-                            {
-                                dynamicPolicyPredict(winnerRand, loserRank, winnerGoals, loserGoals, equalGoals, rankCalculator);
-                            }
-                        }
-                    }
+            //for (int winnerRank = 0; winnerRank < 8; winnerRank++)
+            //{
+            //    for (int loserRank = 9; loserRank < 17; loserRank++)
+            //    {
+            //        for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
+            //        {
+            //            for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
+            //            {
+            //                for (int equalGoals = 0; equalGoals < 5; equalGoals++)
+            //                {
+            //                    dynamicPolicyPredict(winnerRank, loserRank, winnerGoals, loserGoals, equalGoals, rankCalculator);
+            //                }
+            //            }
+            //        }
 
-                }
-            }
+            //    }
+            //}
 
-
+            dynamicPolicyPredict(3, 13, 1, 0, 1, rankCalculator);
             //for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
             //{
             //    for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
@@ -129,33 +129,43 @@ namespace Predict
             foreach (MatchResult matchResult in allMatches)
             {
                 currentPrediction = policy.PredictMatch(matchResult.HosTeam, matchResult.GuestTeam, matchResult.Week);
+                int currentPredictionPoint = 0;
+                
                 if (currentPrediction.HostGoals == matchResult.HostGoals &&
                     currentPrediction.GuestGoals == matchResult.GuestGoals)
                 {
-                    addToDictionary(totalScoreDictionary, matchResult.Week, 10);
+                    currentPredictionPoint = 10;
                     exactPrediction++;
                 }
                 else if ((currentPrediction.HostGoals - currentPrediction.GuestGoals) ==
                          (matchResult.HostGoals - matchResult.GuestGoals))
                 {
-                    addToDictionary(totalScoreDictionary, matchResult.Week, 7);
+                    currentPredictionPoint = 7;
                     sameDiffPrediction++;
                 }
                 else if (Math.Sign(currentPrediction.HostGoals - currentPrediction.GuestGoals) ==
                          Math.Sign(matchResult.HostGoals - matchResult.GuestGoals))
                 {
-                    addToDictionary(totalScoreDictionary, matchResult.Week, 5);
+                    currentPredictionPoint = 5;
                     winnerOkPrediction++;
                 }
                 else
                 {
-                    addToDictionary(totalScoreDictionary, matchResult.Week, 2);
+                    currentPredictionPoint = 2;
                     wrongPrediction++;
                 }
+                addToDictionary(totalScoreDictionary,matchResult.Week,currentPredictionPoint);
+                listBox1.Items.Add(string.Format("{0} ({1}) [{2}:{3}] ({4}) {5} ===>{6}", matchResult.HosTeam.TeamName,
+                                                                                  currentPrediction.HostGoals,
+                                                                                  matchResult.HostGoals,
+                                                                                  matchResult.GuestGoals,
+                                                                                  currentPrediction.GuestGoals,
+                                                                                  matchResult.GuestTeam.TeamName,
+                                                                                  currentPredictionPoint));
             }
             totalScore = exactPrediction * 10 + sameDiffPrediction * 7 + winnerOkPrediction * 5 + wrongPrediction * 2;
             totalMatches = exactPrediction + sameDiffPrediction + winnerOkPrediction + wrongPrediction;
-            if (totalScore > 1260)
+            if (totalScore > 1)
             {
                 listBox1.Items.Add(policy.Name + " ===>>> Exact: " + exactPrediction +
                                    " , SameDiff: " + sameDiffPrediction +
