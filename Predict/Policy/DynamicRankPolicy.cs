@@ -35,13 +35,15 @@ namespace Predict.Policy
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {
             //TODO add 94,93 league data and validate the model
-            _hostTeamRank = _rankCalculator.CalculateCurrentRank(week, hostTeam);
-            _guestTeamRank = _rankCalculator.CalculateCurrentRank(week, guestTeam);
+            
+            _hostTeamRank = _rankCalculator.CalculateCurrentRank(week-1, hostTeam);
+            _guestTeamRank = _rankCalculator.CalculateCurrentRank(week-1, guestTeam);
 
 
             if (bothTeamsAreHighRank())
             {
-                if (lastMatchGuestAndWon(hostTeam, week) || lastMatchHostAndLost(guestTeam,week) )//good host team won last game being gueset
+                if (lastMatchGuestAndWon(hostTeam, week) ||
+                    lastMatchHostAndLost(guestTeam,week)  )//good host team won last game being gueset
                 {
                     return hostWin();
                 }
@@ -52,7 +54,7 @@ namespace Predict.Policy
             }
             else if (hostTeamIsHighRank())
             {
-                return hostWin();
+               return hostWin();
             }
             else if (guestTeamIsHighRank())
             {
@@ -60,7 +62,7 @@ namespace Predict.Policy
             }
             else if(bothTeamsAreLowRank())
             {
-                if (lastMatchHostAndLost(guestTeam,week) || lastMatchGuestAndWon(hostTeam,week))
+                if (lastMatchHostAndLost(guestTeam, week) || lastMatchGuestAndWon(hostTeam, week))
                 {
                     return hostWin();
                 }
@@ -75,10 +77,6 @@ namespace Predict.Policy
                 {
                     return hostWin();
                 }
-                else if (last3MatchesScore(guestTeam, week) >= 4)
-                {
-                    return equalResult();
-                }
                 else
                 {
                     return hostWin();
@@ -86,7 +84,9 @@ namespace Predict.Policy
             }
             else if (hostTeamIsLowRank())
             {
-                return guestWin();
+                {
+                    return guestWin();
+                }
             }
             else
             {

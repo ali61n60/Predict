@@ -16,8 +16,12 @@ namespace Predict.Infrastructure
         private List<MatchResult> matchResults;
         public int CalculateCurrentRank(int week, Team team)
         {
+            
+                
             if (alreadyCalculated)
             {
+                if (week == 0)
+                    return 8;
                 return rankWeeks.Find(rankWeek => (rankWeek.week == week && rankWeek.teamId == team.Id)).rank;
             }
             else

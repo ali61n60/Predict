@@ -27,8 +27,8 @@ namespace Predict.Policy
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {
             Prediction myPrediction=null;
-            int hostTeamRank = _rankCalculator.CalculateCurrentRank(week, hostTeam);
-            int guestTeamRank = _rankCalculator.CalculateCurrentRank(week, guestTeam);
+            int hostTeamRank = _rankCalculator.CalculateCurrentRank(week-1, hostTeam);
+            int guestTeamRank = _rankCalculator.CalculateCurrentRank(week-1, guestTeam);
 
             if ((hostTeamRank+_relativeHighToWin) < guestTeamRank) //host higher
             {

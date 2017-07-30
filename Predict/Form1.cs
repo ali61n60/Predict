@@ -57,6 +57,12 @@ namespace Predict
             //}
 
             dynamicPolicyPredict(3, 13, 1, 0, 1, rankCalculator);
+            listBox1.Items.Add("");
+            listBox1.Items.Add("");
+            listBox1.Items.Add("");
+            listBox1.Items.Add("");
+            dynamicPolicyPredict(3, 16, 1, 0, 1, rankCalculator);
+
             //for (int winnerGoals = 1; winnerGoals <= 5; winnerGoals++)
             //{
             //    for (int loserGoals = 0; loserGoals < winnerGoals; loserGoals++)
@@ -91,11 +97,11 @@ namespace Predict
 
         private void HostWinPolicyPredict(int winnerGoals, int loserGoals, int equalGoals, RankCalculator rankCalculator)
         {
-            IPolicy policy = new HostWinnerPolicy(winnerGoals, loserGoals, equalGoals,rankCalculator);
+            IPolicy policy = new HostWinnerPolicy(winnerGoals, loserGoals, equalGoals, rankCalculator);
             runPrediction(policy, _allMatches);
         }
 
-        private void relativePolicyPredict(int winnerGoals, int loserGoals, int equalGoals, int relativeHighToWin,RankCalculator rankCalculator)
+        private void relativePolicyPredict(int winnerGoals, int loserGoals, int equalGoals, int relativeHighToWin, RankCalculator rankCalculator)
         {
             IPolicy policy = new RelativeRankPolicy(winnerGoals, loserGoals, equalGoals, relativeHighToWin,
                 rankCalculator);
@@ -130,7 +136,7 @@ namespace Predict
             {
                 currentPrediction = policy.PredictMatch(matchResult.HosTeam, matchResult.GuestTeam, matchResult.Week);
                 int currentPredictionPoint = 0;
-                
+
                 if (currentPrediction.HostGoals == matchResult.HostGoals &&
                     currentPrediction.GuestGoals == matchResult.GuestGoals)
                 {
@@ -154,7 +160,7 @@ namespace Predict
                     currentPredictionPoint = 2;
                     wrongPrediction++;
                 }
-                addToDictionary(totalScoreDictionary,matchResult.Week,currentPredictionPoint);
+                addToDictionary(totalScoreDictionary, matchResult.Week, currentPredictionPoint);
                 listBox1.Items.Add(string.Format("{0} ({1}) [{2}:{3}] ({4}) {5} ===>{6}", matchResult.HosTeam.TeamName,
                                                                                   currentPrediction.HostGoals,
                                                                                   matchResult.HostGoals,
@@ -165,7 +171,7 @@ namespace Predict
             }
             totalScore = exactPrediction * 10 + sameDiffPrediction * 7 + winnerOkPrediction * 5 + wrongPrediction * 2;
             totalMatches = exactPrediction + sameDiffPrediction + winnerOkPrediction + wrongPrediction;
-            if (totalScore > 1)
+            if (totalScore > 11)
             {
                 listBox1.Items.Add(policy.Name + " ===>>> Exact: " + exactPrediction +
                                    " , SameDiff: " + sameDiffPrediction +
@@ -173,12 +179,7 @@ namespace Predict
                                    " , WrongGuess: " + wrongPrediction +
                                    " ,TotalMatches: " + totalMatches +
                                    " , Total " + totalScore);
-               
-                //foreach (KeyValuePair<int, int> keyValuePair in totalScoreDictionary)
-                //{
-                //    listBox1.Items.Add("(" + keyValuePair.Key + "," + keyValuePair.Value+")");
-                //}
-                
+
             }
             if (totalScore > maxScore)
                 maxScore = totalScore;
@@ -189,7 +190,7 @@ namespace Predict
             if (totalScoreDictionary.ContainsKey(week))
                 totalScoreDictionary[week] += score;
             else
-                totalScoreDictionary.Add(week,score);
+                totalScoreDictionary.Add(week, score);
         }
     }
 }
