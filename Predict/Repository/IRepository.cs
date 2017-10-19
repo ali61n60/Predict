@@ -32,8 +32,6 @@ namespace Predict.Repository
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    //command.Parameters.Add("@start", SqlDbType.Int).Value = index;
-                    //command.Parameters.Add("@end", SqlDbType.Int).Value = (index + count - 1);
                     connection.Open();
                     dataReader= command.ExecuteReader();
                     while (dataReader.Read())
@@ -60,8 +58,6 @@ namespace Predict.Repository
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    //command.Parameters.Add("@start", SqlDbType.Int).Value = index;
-                    //command.Parameters.Add("@end", SqlDbType.Int).Value = (index + count - 1);
                     connection.Open();
                     dataReader = command.ExecuteReader();
                     while (dataReader.Read())

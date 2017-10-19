@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Predict.Infrastructure;
+﻿using Predict.Infrastructure;
 using Predict.Models;
 
 namespace Predict.Policy
@@ -25,18 +20,13 @@ namespace Predict.Policy
 
         public Prediction PredictMatch(Team hostTeam, Team guestTeam, int week)
         {
-            Prediction myPrediction = null;
+            Prediction myPrediction;
             int hostTeamRank = _rankCalculator.CalculateCurrentRank(week-1, hostTeam);
             int guestTeamRank = _rankCalculator.CalculateCurrentRank(week-1, guestTeam);
 
-            if (hostTeamRank  < guestTeamRank) //host higher
-            {
-                myPrediction = new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals };
-            }
-            else
-            {
-                myPrediction = new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
-            }
+            myPrediction = hostTeamRank  < guestTeamRank ?
+                new Prediction() { HostGoals = _winnerGoals, GuestGoals = _loserGoals } :
+                new Prediction() { HostGoals = _equalGoals, GuestGoals = _equalGoals };
 
             return myPrediction;
         }

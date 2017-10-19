@@ -4,8 +4,8 @@ namespace Predict.Policy
 {
     public class SimplePolicy : IPolicy
     {
-        private int _hostGoals;
-        private int _guestGoals;
+        private readonly int _hostGoals;
+        private readonly int _guestGoals;
 
         public SimplePolicy(int hostGoals, int guestGoals)
         {

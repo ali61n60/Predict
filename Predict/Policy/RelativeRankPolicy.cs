@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Predict.Infrastructure;
+﻿using Predict.Infrastructure;
 using Predict.Models;
 
 namespace Predict.Policy
 {
     public class RelativeRankPolicy:IPolicy
     {
-        RankCalculator _rankCalculator;
-        private int _equalGoals;
-        private int _winnerGoals;
-        private int _loserGoals;
-        private int _relativeHighToWin;
+        readonly RankCalculator _rankCalculator;
+        private readonly int _equalGoals;
+        private readonly int _winnerGoals;
+        private readonly int _loserGoals;
+        private readonly int _relativeHighToWin;
         public RelativeRankPolicy(int winnerGoals,int loserGoals,int equalGoals,int relativeHighToWin, RankCalculator rankCalculator)
         {
             _winnerGoals = winnerGoals;
